@@ -61,23 +61,29 @@ products.forEach((product) => {
 //carrega o html gerado
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
-//verifica se no carrinho ja existe um produto, caso exista apenas aumenta a quantidade
 document.querySelectorAll(".js-add-to-cart").forEach((buttonElem) => {
   buttonElem.addEventListener("click", () => {
     const productId = buttonElem.dataset.productId;
     let matchingProduct;
 
+    //verifica se no carrinho ja existe um produto, caso exista apenas aumenta a quantidade
     cart.forEach((item) => {
       if (productId === item.productId) {
         matchingProduct = item;
       }
-
-      if (matchingProduct) {
-        matchingProduct.quantity++;
-      } else {
-        cart.push({ productId: productId, quantity: 1 });
-      }
     });
+    if (matchingProduct) {
+      matchingProduct.quantity++;
+    } else {
+      cart.push({ productId: productId, quantity: 1 });
+    }
+
+    let cartQuantity = 0;
+    //altera a quantidade de produtos no carrinho
+    cart.forEach((item) => {
+      cartQuantity += item.quantity;
+    });
+
+    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
   });
-  console.log(cart);
 });
