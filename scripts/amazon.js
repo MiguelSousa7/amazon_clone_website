@@ -33,7 +33,7 @@ products.forEach((product) => {
           )}</div>
 
           <div class="product-quantity-container">
-            <select>
+            <select class="js-quantity-selector-${product.id}">
               <option selected value="1">1</option>
               <option value="2">2</option>
               <option value="3">3</option>
@@ -67,6 +67,9 @@ document.querySelector(".js-products-grid").innerHTML = productsHTML;
 document.querySelectorAll(".js-add-to-cart").forEach((buttonElem) => {
   buttonElem.addEventListener("click", () => {
     const productId = buttonElem.dataset.productId;
+    const productQuantity = Number(
+      document.querySelector(`.js-quantity-selector-${productId}`).value
+    );
     let matchingProduct;
 
     //verifica se no carrinho ja existe um produto, caso exista apenas aumenta a quantidade
@@ -76,13 +79,13 @@ document.querySelectorAll(".js-add-to-cart").forEach((buttonElem) => {
       }
     });
     if (matchingProduct) {
-      matchingProduct.quantity++;
+      matchingProduct.quantity += productQuantity;
     } else {
-      cart.push({ productId: productId, quantity: 1 });
+      cart.push({ productId: productId, quantity: productQuantity });
     }
 
     let cartQuantity = 0;
-    //altera a quantidade de produtos no carrinho
+    //altera o valor acumulado de produtos no carrinho
     cart.forEach((item) => {
       cartQuantity += item.quantity;
     });
