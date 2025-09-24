@@ -1,4 +1,4 @@
-import { cart } from "../data/cart.js";
+import { cart, addToCart } from "../data/cart.js";
 import { products } from "../data/products.js";
 
 let productsHTML = "";
@@ -64,6 +64,36 @@ products.forEach((product) => {
 //carrega o html gerado
 document.querySelector(".js-products-grid").innerHTML = productsHTML;
 
+function showAddedMsg(product_id, timeoutId) {
+  document
+    .querySelector(`.js-added-to-cart-${product_id}`)
+    .classList.add("show-added-to-cart");
+
+  //faz reset ao timeout caso clique novamente no botao
+  if (timeoutId) {
+    clearTimeout(timeoutId);
+  }
+
+  timeoutId = setTimeout(() => {
+    document
+      .querySelector(`.js-added-to-cart-${product_id}`)
+      .classList.remove("show-added-to-cart");
+    timeoutId = null;
+  }, 2000);
+
+  return timeoutId;
+}
+
+function updateCartQuantity() {
+  let cartQuantity = 0;
+  //altera o valor acumulado da quantidade de produtos no carrinho
+  cart.forEach((cartItem) => {
+    cartQuantity += cartItem.quantity;
+  });
+
+  document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+}
+
 document.querySelectorAll(".js-add-to-cart").forEach((buttonElem) => {
   let timeoutId;
   buttonElem.addEventListener("click", () => {
@@ -71,43 +101,9 @@ document.querySelectorAll(".js-add-to-cart").forEach((buttonElem) => {
     const productQuantity = Number(
       document.querySelector(`.js-quantity-selector-${productId}`).value
     );
-    let matchingProduct;
 
-    //verifica se no carrinho ja existe um produto, caso exista apenas aumenta a quantidade
-    cart.forEach((item) => {
-      if (productId === item.productId) {
-        matchingProduct = item;
-      }
-    });
-    if (matchingProduct) {
-      matchingProduct.quantity += productQuantity;
-    } else {
-      cart.push({ productId: productId, quantity: productQuantity });
-    }
-
-    //mostra a msgm "added"
-    document
-      .querySelector(`.js-added-to-cart-${productId}`)
-      .classList.add("show-added-to-cart");
-
-    //faz reset ao timeout caso clique novamente no botao
-    if (timeoutId) {
-      clearTimeout(timeoutId);
-    }
-
-    timeoutId = setTimeout(() => {
-      document
-        .querySelector(`.js-added-to-cart-${productId}`)
-        .classList.remove("show-added-to-cart");
-      timeoutId = null;
-    }, 2000);
-
-    let cartQuantity = 0;
-    //altera o valor acumulado da quantidade de produtos no carrinho
-    cart.forEach((item) => {
-      cartQuantity += item.quantity;
-    });
-
-    document.querySelector(".js-cart-quantity").innerHTML = cartQuantity;
+    addToCart(productId, productQuantity);
+    timeoutId = showAddedMsg(productId, timeoutId);
+    updateCartQuantity();
   });
 });
