@@ -1,13 +1,21 @@
-export let cart = [
-  {
-    productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
-    quantity: 2,
-  },
-  {
-    productId: "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
-    quantity: 1,
-  },
-];
+export let cart = JSON.parse(localStorage.getItem("cart"));
+
+if (!cart) {
+  cart = [
+    {
+      productId: "e43638ce-6aa0-4b85-b27f-e1d07eb678c6",
+      quantity: 2,
+    },
+    {
+      productId: "83d4ca15-0f35-48f5-b7a3-1ea210004f2e",
+      quantity: 1,
+    },
+  ];
+}
+
+function saveToStorage() {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
 
 export function addToCart(product_id, product_quantity) {
   let matchingProduct;
@@ -23,6 +31,8 @@ export function addToCart(product_id, product_quantity) {
   } else {
     cart.push({ productId: product_id, quantity: product_quantity });
   }
+
+  saveToStorage();
 }
 
 export function removeCartItem(product_id) {
@@ -35,4 +45,5 @@ export function removeCartItem(product_id) {
   });
 
   cart = newArray;
+  saveToStorage();
 }
