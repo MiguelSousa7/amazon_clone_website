@@ -76,3 +76,18 @@ export function updateQuantity(productId, newQuantity) {
 
   saveToStorage();
 }
+
+export function updateDeliveryOption(product_id, deliveryOption_id) {
+  let matchingProduct;
+
+  //verifica se no carrinho ja existe um produto, caso exista, apenas aumenta a quantidade
+  cart.forEach((cartItem) => {
+    if (product_id === cartItem.productId) {
+      matchingProduct = cartItem;
+    }
+  });
+
+  matchingProduct.deliveryOptionId = deliveryOption_id;
+
+  saveToStorage();
+}
