@@ -12,6 +12,7 @@ import {
   deliveryOptions,
   getDeliveryOption,
 } from "../../data/deliveryOptions.js";
+import { renderPaymentSummary } from "./paymentSummary.js";
 
 export function renderOrderSummary() {
   updateOrderQuantity();
@@ -121,6 +122,7 @@ export function renderOrderSummary() {
       const productId = link.dataset.productId;
       removeCartItem(productId);
       updateOrderQuantity();
+      renderPaymentSummary();
 
       const container = document.querySelector(
         `.js-cart-item-container-${productId}`
@@ -171,6 +173,7 @@ export function renderOrderSummary() {
       const { productId, deliveryOptionId } = optionElem.dataset;
       updateDeliveryOption(productId, deliveryOptionId);
       renderOrderSummary();
+      renderPaymentSummary();
     });
   });
 }
