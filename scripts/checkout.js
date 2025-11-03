@@ -6,13 +6,17 @@ import { loadCart } from "../data/cart.js";
 //import "../data/be-practice.js";
 
 async function loadPage() {
-  await loadProductsFetch();
+  try {
+    await loadProductsFetch();
 
-  await new Promise((resolve) => {
-    loadCart(() => {
-      resolve();
+    await new Promise((resolve) => {
+      loadCart(() => {
+        resolve();
+      });
     });
-  });
+  } catch (err) {
+    console.log("Unexpected error, please try again later.", err);
+  }
 
   renderOrderSummary();
   renderPaymentSummary();
